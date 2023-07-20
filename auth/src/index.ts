@@ -1,22 +1,9 @@
-import express from 'express';
-import 'express-async-errors';
-import { authRoute } from './routes/auth.route';
-import { errorHanlder } from './middlewares/error.middleware';
-import { NotFoundError } from './errors/notFound.error';
 import mongoose from 'mongoose';
-
-const app = express();
-app.use(express.json());
-app.use(express.urlencoded({extended: true}));
-
-app.use('/api/users', authRoute);
-app.all('*', async () => { throw new NotFoundError() });
-
-//error handling
-app.use(errorHanlder);
+import { app } from './app';
 
 const start = async () => {
     try {
+        if(!process.env.JWT_KEY) throw new Error('JWT key env must be set');
         await mongoose.connect('mongodb://auth-mongo-srv:27017/auth');
         console.log('connected to mongodb');
 

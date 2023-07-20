@@ -28,7 +28,15 @@ const userSchema = new Schema({
         required: true
     }
 }, {
-    timestamps: true
+    // timestamps: true,
+    toJSON: {
+        transform(doc, ret) {
+            ret.id = ret._id;
+            delete ret._id;
+            delete ret.password;
+        }
+    },
+    versionKey: false
 });
 
 userSchema.pre('save', async function(done) {
