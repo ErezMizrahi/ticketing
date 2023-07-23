@@ -28,7 +28,6 @@ export const signout = (req: Request, res: Response) => {
 
 export const signup = async (req: Request, res: Response) => {
     const { email, password } = req.body;
-    console.log('Creating a user...')
     const service = new UserService();
     const user = await service.createUser(email, password);
 

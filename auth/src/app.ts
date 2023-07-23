@@ -9,7 +9,7 @@ const app = express();
 
 //settings
 app.set('trust proxy', true); //because the express server is behind ingress and it need to trust the proxy
-app.use(cookieSession( {signed: false, secure: true} ))
+app.use(cookieSession( {signed: false, secure: process.env.NODE_ENV !== 'test'} ))
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 

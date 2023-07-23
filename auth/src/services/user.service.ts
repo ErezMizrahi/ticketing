@@ -25,8 +25,6 @@ export class UserService {
             });
     
             await user.save();
-            console.log(`user ${user}`);
-
             return user;
         
     }
