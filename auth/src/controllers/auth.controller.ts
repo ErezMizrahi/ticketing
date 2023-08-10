@@ -23,7 +23,7 @@ export const signin = async (req: Request, res: Response) => {
 
 export const signout = (req: Request, res: Response) => {
     req.session = null;
-    res.status(200).send();
+    res.status(200).send({});
 }
 
 export const signup = async (req: Request, res: Response) => {

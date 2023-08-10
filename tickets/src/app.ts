@@ -1,8 +1,8 @@
 import express from 'express';
 import 'express-async-errors';
-import { authRoute } from './routes/auth.route';
 import { errorHanlder, NotFoundError } from '@erezmiz-npm/tickets-common';
 import cookieSession from 'cookie-session';
+import { ticketsRouter } from './routes/tickets.route';
 
 const app = express();
 
@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 
 //routes
-app.use('/api/users', authRoute);
+app.use('/api/tickets', ticketsRouter)
 app.all('*', async () => { throw new NotFoundError() });
 
 //error handling

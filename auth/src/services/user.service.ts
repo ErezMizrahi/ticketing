@@ -1,4 +1,4 @@
-import { BadRequestError } from "../errors/badRequest.error";
+import { BadRequestError } from "@erezmiz-npm/tickets-common";
 import { User, UserDocument } from "../models/user.model";
 import jwt from "jsonwebtoken";
 import { PassowrdService } from "./password.service";

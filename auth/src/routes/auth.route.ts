@@ -1,8 +1,7 @@
 import { Router } from 'express'
 import { getCurrentUser, signin, signout, signup } from '../controllers/auth.controller';
 import { body } from 'express-validator';
-import { validateRquest } from '../middlewares/validateRequest.middleware';
-import { currentUser } from '../middlewares/currentUser.middleware';
+import { validateRquest, currentUser } from '@erezmiz-npm/tickets-common';
 
 const router = Router();
 
