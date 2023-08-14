@@ -1,21 +1,28 @@
-import nats, { Message } from 'node-nats-streaming';
+import nats from 'node-nats-streaming';
+import { randomBytes } from 'crypto';
+import { TicketCreatedListener } from './events/ticket-create-listener';
 
 console.clear();
 
-const stan = nats.connect('ticketing', '123', {
+const stan = nats.connect('ticketing', randomBytes(4).toString('hex'), {
     url: 'http://localhost:4222'
 });
 
 stan.on('connect', () => {
     console.log('listener connected to nats');
 
-    const subscription = stan.subscribe('ticket:created');
-    subscription.on('message', (msg: Message) => {
-        console.log('message recived');
-        const data = msg.getData();
-
-        if (typeof data === 'string') {
-            console.log(`Recived event number #${msg.getSequence()} with data ${data}`);
-        }
+    stan.on('close', () => {
+        console.log('listener connection close');
+        process.exit();
     });
+
+    new TicketCreatedListener(stan).listen();
 });
+
+
+process.on('SIGINT', () => stan.close());
+process.on('SIGTERM', () => stan.close());
+
+
+
+
