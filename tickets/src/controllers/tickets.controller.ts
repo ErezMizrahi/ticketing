@@ -9,8 +9,8 @@ export const newTicket = async (req: Request, res: Response) => {
         price,
         userId: req.currentUser!.id
     });
-    res.status(201)
-        .json(ticket);
+
+    res.status(201).json(ticket);
 }
 
 export const getTicket = async (req: Request, res: Response) => {
