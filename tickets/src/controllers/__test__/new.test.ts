@@ -13,7 +13,7 @@ it('has a route handler lisiting to /api/tickets for post requests', async () =>
     .toEqual(404);
 });
 
-it('can only be accessed if the user i signed in', async () => {
+it('can only be accessed if the user is signed in', async () => {
     await request(app)
     .post('/api/tickets')
     .send({})
