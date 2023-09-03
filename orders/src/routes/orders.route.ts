@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { getOrders, deleteOrder, getOrder, createOrder } from '../controllers/order.controller';
+import { getOrders, patchOrder, getOrder, createOrder } from '../controllers/order.controller';
 import { currentUser, requireAuth, validateRquest } from '@erezmiz-npm/tickets-common';
 import { body } from 'express-validator';
 import mongoose from 'mongoose';
@@ -7,11 +7,11 @@ const router = Router();
 
 router.use(currentUser);
 
-router.get('/', getOrders);
+router.get('/', requireAuth, getOrders);
 
-router.get('/:id', getOrder);
+router.get('/:orderId',requireAuth, getOrder);
 
-router.delete('/:id', deleteOrder);
+router.patch('/:orderId',requireAuth, patchOrder);
 
 router.post('/', requireAuth, [
     body('ticketId')

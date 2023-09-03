@@ -1,4 +1,4 @@
-import { NotAuthorizedError, NotFoundError } from "@erezmiz-npm/tickets-common";
+import { BadRequestError, NotAuthorizedError, NotFoundError } from "@erezmiz-npm/tickets-common";
 import { Ticket, TicketAttrs } from "../models/ticket.model";
 import { TicketCreatedPublisher } from "../events/publishers/ticket-created-publisher";
 import { natsWrapper } from "../nats-wrapper";
@@ -11,6 +11,7 @@ export class TicketService {
 
         new TicketCreatedPublisher(natsWrapper.client).publish({
             id: newTicket.id,
+            version: newTicket.version,
             title: newTicket.title,
             price: newTicket.price,
             userId: newTicket.userId
@@ -36,6 +37,10 @@ export class TicketService {
     async updateTicketById({ id, currentUserId, title, price }: UpdateType) { 
         const ticket = await this.getTicket(id);
 
+        if(ticket.orderId) {
+            throw new BadRequestError('Cannot edit a reserved Ticket');
+        }
+
         if(ticket.userId !== currentUserId) {
             throw new NotAuthorizedError();
         }
@@ -49,9 +54,10 @@ export class TicketService {
 
         new TicketUpdatePublisher(natsWrapper.client).publish({
             id: ticket.id,
+            version: ticket.version,
             title: ticket.title,
             price: ticket.price,
-            userId: ticket.userId
+            userId: ticket.userId,
         });
         
         return ticket;

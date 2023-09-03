@@ -1,19 +1,23 @@
 import { Document, Model, Schema, model } from "mongoose";
 import { Order, OrderStatus } from "./order.model";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface TicketAttrs {
+    id: string;
     title: string;
-    price: string;
+    price: number;
 }
 
 export interface TicketDoc extends Document {
     title: string;
-    price: string;
-    isReserved(): Promise<boolean>
+    price: number;
+    isReserved(): Promise<boolean>;
+    version: number;
 }
 
 interface TicketModel extends Model<TicketDoc> {
-    build(attrs: TicketAttrs): TicketDoc
+    build(attrs: TicketAttrs): TicketDoc;
+    findByEvent(event: { id: string, version: number }): Promise<TicketDoc | null>;
 }
 
 const ticketSchema = new Schema({
@@ -35,8 +39,22 @@ const ticketSchema = new Schema({
     }
 });
 
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
+
 ticketSchema.statics.build = (attrs: TicketAttrs) => {
-    return new Ticket(attrs);
+    return new Ticket({
+            _id: attrs.id,
+            title: attrs.title,
+            price: attrs.price
+    });
+}
+
+ticketSchema.statics.findByEvent = (event: {id: string, version: number}) => {
+    return Ticket.findOne({
+        _id: event.id,
+        version: event.version - 1
+    })
 }
 
 ticketSchema.methods.isReserved = async function () {
