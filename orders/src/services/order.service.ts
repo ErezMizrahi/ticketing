@@ -6,7 +6,7 @@ import { natsWrapper } from "../nats-wrapper";
 import { OrderCancelledPublisher } from "../events/publishers/order.cancelled";
 
 export class OrdersService {
-    private readonly EXPERATION_WINDOW_SECONDES: number = 15 * 60;  
+    private readonly EXPERATION_WINDOW_SECONDES: number = 1 * 60;  
 
     async findTicket(ticketId: string): Promise<TicketDoc> {
         const ticket = await Ticket.findById({ _id: ticketId });

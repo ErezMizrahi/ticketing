@@ -3,6 +3,7 @@ import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
 import { TicketCreatedListener } from './events/listeners/ticket.created';
 import { TicketUpdatedListener } from './events/listeners/ticket.updated';
+import { ExpirationCompleteLisenter } from './events/listeners/expiration.completed';
 
 const start = async () => {
     try {
@@ -29,6 +30,7 @@ const start = async () => {
 
             new TicketCreatedListener(natsWrapper.client).listen();
             new TicketUpdatedListener(natsWrapper.client).listen();
+            new ExpirationCompleteLisenter(natsWrapper.client).listen();
         });
     } catch (e) {
         console.error(e)
