@@ -1,10 +1,8 @@
 import mongoose from 'mongoose';
 import { app } from './app';
 import { natsWrapper } from './nats-wrapper';
-import { TicketCreatedListener } from './events/listeners/ticket.created';
-import { TicketUpdatedListener } from './events/listeners/ticket.updated';
-import { ExpirationCompleteLisenter } from './events/listeners/expiration.completed';
-import { PaymentCreatedListener } from './events/listeners/payment.created.listener';
+import { OrderCreatedListener } from './events/listeners/order.created.listener';
+import { OrderCancelledListener } from './events/listeners/order.cancelled.listener';
 
 const start = async () => {
     try {
@@ -23,16 +21,14 @@ const start = async () => {
         process.on('SIGINT', () => natsWrapper.client.close());
         process.on('SIGTERM', () => natsWrapper.client.close());
 
+        new OrderCreatedListener(natsWrapper.client).listen();
+        new OrderCancelledListener(natsWrapper.client).listen();
+        
         await mongoose.connect(process.env.MOMGO_URI);
         console.log('connected to mongodb');
 
         app.listen(3000, () => {
             console.log('listening on port 3000');
-
-            new TicketCreatedListener(natsWrapper.client).listen();
-            new TicketUpdatedListener(natsWrapper.client).listen();
-            new ExpirationCompleteLisenter(natsWrapper.client).listen();
-            new PaymentCreatedListener(natsWrapper.client).listen();
         });
     } catch (e) {
         console.error(e)

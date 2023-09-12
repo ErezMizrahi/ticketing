@@ -5,7 +5,7 @@ import nextFetch from '@/api/next-fetch'
 interface RequestAttr {
     url: string,
     method: "get" | "post",
-    body: any,
+    body?: any,
     onSuccess?: (response: any) => void
 }
 
