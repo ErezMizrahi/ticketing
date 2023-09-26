@@ -12,13 +12,16 @@ interface RequestAttr {
 const useRequest = ({ url, method, body, onSuccess }: RequestAttr) => {
     const [errors, setErrors] = useState<JSX.Element | null>(null);
  
-    const doRequest = async () => {
+    const doRequest = async (props = {}) => {
         try {
+            if(method != 'get') {
+                body = {...body, ...props}
+            }
             const response = await nextFetch({
                 route: url,
                 method,
                 headersMap: { 'Content-type': 'application/json' },
-                body })
+                body})
             const json = await response.json();
             if (response.ok) {
                 if (onSuccess) {

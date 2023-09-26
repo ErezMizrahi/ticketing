@@ -29,7 +29,7 @@ export class TicketService {
     }
 
     async getTickets() {
-        const tickets = await Ticket.find({});
+        const tickets = await Ticket.find({ orderId: undefined });
         return tickets;
     }
 

@@ -12,6 +12,8 @@ const Header = () => {
     const links = [
         !authState?.email && { label: 'Sign Up', href: '/auth/signup' },
         !authState?.email && { label: 'Sign In', href: '/auth/signin' },
+        authState.email && { label: 'Sell Tickets', href: '/tickets/new' },
+        authState.email && { label: 'My Orders', href: '/orders' },
         authState?.email && { label: 'Sign Out', href: '/auth/signout' }
     ]
         .filter(truthyFilter)
